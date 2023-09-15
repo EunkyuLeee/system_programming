@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #define BUFSIZE 512
 
@@ -11,7 +12,7 @@ int main(){
 	char buf[BUFSIZE];
 	ssize_t nread;
 
-	file = open("test.txt", O_RDONLY);
+	file = open("test.txt", O_RDWR);
 	
 	lseek(file, 10, SEEK_SET);
 	
@@ -20,8 +21,11 @@ int main(){
 
 	lseek(file, -5, SEEK_END);
 
-	nread = read(file, buf, BUFSIZE);
-	write(1, buf, nread);
+
+	while(lseek(file, -2, SEEK_CUR) != -1){
+		read(file, buf, 1);
+		write(1, buf, 1);
+	}
 
 	close(file);
 }
