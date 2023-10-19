@@ -6,21 +6,22 @@
 
 int main()
 {
-	int fd, size, i, status, pid;
+	int fd, size, i, status;
 	char buf[256];
+	int pid[256];
 
 	fd = open("sample.txt", O_RDONLY, 0644);
 	size = read(fd, buf, 256);
 
 	for (i = 0; i < size; i++)
 	{
-		if ((pid = fork()) == 0)
+		if ((pid[i] = fork()) == 0)
 		{
 			break;
 		}
 		sleep(1);
 	}
-	if (pid == 0)
+	if (i < size && pid[i] == 0)
 	{
 		int wfd;
 		wfd = open("output.txt", O_WRONLY | O_CREAT | O_APPEND, 0644);
@@ -30,7 +31,10 @@ int main()
 		exit(1);
 	}
 	else
-	{	
-		waitpid(pid, &status, 0);
+	{
+		for (int j = 0; j < size; j++)
+		{
+			waitpid(pid[j], &status, 0);
+		}
 	}
 }
