@@ -2,6 +2,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 int main()
 {
@@ -15,17 +16,21 @@ int main()
 	{
 		if ((pid = fork()) == 0)
 		{
-			int wfd;
-			wfd = open("output.txt", O_WRONLY | O_CREAT | O_APPEND, 0644);
-			write(wfd, buf, i + 1);
-			write(wfd, "\n", 1);
-			close(wfd);
 			break;
 		}
-		else
-		{
-			waitpid(pid, &status, 0);
-		}
+		sleep(1);
 	}
-	
+	if (pid == 0)
+	{
+		int wfd;
+		wfd = open("output.txt", O_WRONLY | O_CREAT | O_APPEND, 0644);
+		write(wfd, buf, i + 1);
+		write(wfd, "\n", 1);
+		close(wfd);
+		exit(1);
+	}
+	else
+	{	
+		waitpid(pid, &status, 0);
+	}
 }
