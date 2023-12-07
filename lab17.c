@@ -5,6 +5,7 @@ void* thread_code(void* param)
 {
 	int id = (int)param;
 	printf("%d\n", id);
+	pthread_exit(0);
 }
 
 int main()
